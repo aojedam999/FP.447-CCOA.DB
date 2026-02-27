@@ -5,48 +5,48 @@ import java.time.LocalDateTime;
 public class Pedido {
 
     private int numeroPedido;
-    private LocalDateTime fechaHora;
-    private int cantidadUnidades;
-    private EstadoEnvio estado;
-
     private Cliente cliente;
     private Articulo articulo;
+    private int unidades;
+    private LocalDateTime fechaHora;
+    private EstadoEnvio estado;
 
-    public Pedido(int numeroPedido, LocalDateTime fechaHora, int cantidadUnidades,
+    public Pedido(int numeroPedido, LocalDateTime fechaHora, int unidades,
                   Cliente cliente, Articulo articulo) {
 
         this.numeroPedido = numeroPedido;
         this.fechaHora = fechaHora;
-        this.cantidadUnidades = cantidadUnidades;
+        this.unidades = unidades;
         this.cliente = cliente;
         this.articulo = articulo;
-        this.estado = EstadoEnvio.PENDIENTE; // por defecto
+        this.estado = EstadoEnvio.PENDIENTE;
     }
 
-    public int getNumeroPedido() {return numeroPedido;}
+    public int getNumeroPedido() { return numeroPedido; }
 
-    public LocalDateTime getFechaHora() {return fechaHora;}
+    public LocalDateTime getFechaHora() { return fechaHora; }
 
-    public int getCantidadUnidades() {return cantidadUnidades;}
+    public int getUnidades() { return unidades; }
 
-    public void setCantidadUnidades(int cantidadUnidades) {this.cantidadUnidades = cantidadUnidades;}
+    public void setUnidades(int unidades) { this.unidades = unidades; }
 
-    public EstadoEnvio getEstado() {return estado;}
+    public EstadoEnvio getEstado() { return estado; }
 
-    public void setEstado(EstadoEnvio estado) {this.estado = estado;}
+    public void setEstado(EstadoEnvio estado) { this.estado = estado; }
 
-    public Cliente getCliente() {return cliente;}
+    public Cliente getCliente() { return cliente; }
 
-    public Articulo getArticulo() {return articulo;}
+    public Articulo getArticulo() { return articulo; }
 
     public double calcularTotal() {
 
-        double totalBase = (articulo.getPrecioVenta() * cantidadUnidades)
-                + articulo.getGastosEnvio();
-
+        double totalProductos = articulo.getPrecioVenta() * unidades;
+        double gastosEnvio = articulo.getGastosEnvio();
         double descuento = cliente.calcularDescuentoEnvio();
 
-        return totalBase - (totalBase * descuento);
+        double gastosConDescuento = gastosEnvio - (gastosEnvio * descuento);
+
+        return totalProductos + gastosConDescuento;
     }
 
     public boolean puedeEliminarse() {
@@ -65,7 +65,7 @@ public class Pedido {
                 "Fecha/Hora        : " + fechaHora + "\n" +
                 "Cliente           : " + cliente.getNombre() + "\n" +
                 "Artículo          : " + articulo.getDescripcion() + "\n" +
-                "Cantidad unidades : " + cantidadUnidades + "\n" +
+                "Unidades          : " + unidades + "\n" +
                 "Estado            : " + estado + "\n" +
                 "Total             : " + calcularTotal();
     }

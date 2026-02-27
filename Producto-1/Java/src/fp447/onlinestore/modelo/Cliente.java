@@ -40,7 +40,5 @@ public abstract class Cliente {
                 "Domicilio   : " + domicilio;
     }
 
-    public abstract boolean esPremium();
-
     public abstract double calcularDescuentoEnvio();
 }

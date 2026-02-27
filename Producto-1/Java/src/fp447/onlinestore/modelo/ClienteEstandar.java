@@ -7,11 +7,6 @@ public class ClienteEstandar extends Cliente {
     }
 
     @Override
-    public boolean esPremium() {
-        return false;
-    }
-
-    @Override
     public double calcularDescuentoEnvio() {
         return 0.0;
     }

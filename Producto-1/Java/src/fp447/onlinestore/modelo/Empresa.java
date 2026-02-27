@@ -17,27 +17,27 @@ public class Empresa {
         this.articulos = new ArrayList<>();
     }
 
-    public String getNombre() {return nombre;}
+    public String getNombre() { return nombre; }
 
-    public List<Pedido> getPedidos() {return pedidos;}
+    public List<Pedido> getPedidos() { return pedidos; }
 
-    public List<Cliente> getClientes() {return clientes;}
+    public List<Cliente> getClientes() { return clientes; }
 
-    public List<Articulo> getArticulos() {return articulos;}
+    public List<Articulo> getArticulos() { return articulos; }
 
-    public void añadirCliente(Cliente c) {clientes.add(c);}
+    public void añadirCliente(Cliente c) { clientes.add(c); }
 
-    public void mostrarClientes() {clientes.forEach(System.out::println);}
+    public void mostrarClientes() { clientes.forEach(System.out::println); }
 
     public void mostrarClientesEstandar() {
         clientes.stream()
-                .filter(c -> !c.esPremium())
+                .filter(c -> c instanceof ClienteEstandar)
                 .forEach(System.out::println);
     }
 
     public void mostrarClientesPremium() {
         clientes.stream()
-                .filter(Cliente::esPremium)
+                .filter(c -> c instanceof ClientePremium)
                 .forEach(System.out::println);
     }
 
