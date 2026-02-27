@@ -40,8 +40,13 @@ public class Pedido {
     public Articulo getArticulo() {return articulo;}
 
     public double calcularTotal() {
-        return (articulo.getPrecioVenta() * cantidadUnidades)
+
+        double totalBase = (articulo.getPrecioVenta() * cantidadUnidades)
                 + articulo.getGastosEnvio();
+
+        double descuento = cliente.calcularDescuentoEnvio();
+
+        return totalBase - (totalBase * descuento);
     }
 
     public boolean puedeEliminarse() {
