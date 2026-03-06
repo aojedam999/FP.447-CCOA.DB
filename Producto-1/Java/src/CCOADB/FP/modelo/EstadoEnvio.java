@@ -1,4 +1,4 @@
-package fp447.onlinestore.modelo;
+package CCOADB.FP.modelo;
 
 public enum EstadoEnvio {
     PENDIENTE,

@@ -1,9 +1,13 @@
-package fp447.onlinestore.modelo;
+package CCOADB.FP.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Empresa {
+
+    public Empresa() {
+
+    }
 
     private String nombre;
     private List<Pedido> pedidos;
