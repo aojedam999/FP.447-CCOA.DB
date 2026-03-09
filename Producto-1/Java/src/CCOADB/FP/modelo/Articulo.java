@@ -50,11 +50,33 @@ public class Articulo {
     public String toString() {
         return "Artículo\n" +
                 "----------------------------------\n" +
-                "Código               : " + codigo + "\n" +
-                "Descripción          : " + descripcion + "\n" +
-                "Precio de venta         : " + precioVenta + "\n" +
-                "Gastos de envío         : " + gastosEnvio + "\n" +
-                "Tiempo de preparación   : " + tiempoPreparacionMin + " min\n" +
-                "Stock disponible        : " + stockDisponible;
+                "Código: " + codigo + "\n" +
+                "Descripción: " + descripcion + "\n" +
+                "Precio de venta: " + precioVenta + "\n" +
+                "Gastos de envío: " + gastosEnvio + "\n" +
+                "Tiempo de preparación: " + tiempoPreparacionMin + " min\n" +
+                "Stock disponible: " + stockDisponible;
     }
+
+    public boolean hayStock(int unidades) {return stockDisponible >= unidades;}
+
+    public void reducirStock(int unidades) {stockDisponible -= unidades;}
+
+    public void aumentarStock(int unidades) {stockDisponible += unidades;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Articulo)) return false;
+
+        Articulo articulo = (Articulo) o;
+
+        return codigo.equals(articulo.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return codigo.hashCode();
+    }
+
 }

@@ -28,8 +28,8 @@ public class ClientePremium extends Cliente {
     @Override
     public String toString() {
         return super.toString() +
-                "\nTipo      : Premium" +
-                "\nCuota     : " + cuotaAnual +
-                "\nDescuento : " + descuentoEnvio + "%";
+                "\nTipo: Cliente Premium" +
+                "\nCuota anual: " + cuotaAnual +
+                "\nDescuento: " + descuentoEnvio + "%";
     }
 }

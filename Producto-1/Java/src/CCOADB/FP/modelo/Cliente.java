@@ -34,11 +34,27 @@ public abstract class Cliente {
     public String toString() {
         return "Cliente\n" +
                 "----------------------------------\n" +
-                "Nombre     : " + nombre + "\n" +
-                "Email    : " + email + "\n" +
-                "NIF/NIE : " + NIFNIE + "\n" +
-                "Domicilio   : " + domicilio;
+                "Nombre: " + nombre + "\n" +
+                "Email: " + email + "\n" +
+                "NIF/NIE: " + NIFNIE + "\n" +
+                "Domicilio: " + domicilio;
     }
 
     public abstract double calcularDescuentoEnvio();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cliente)) return false;
+
+        Cliente cliente = (Cliente) o;
+
+        return email.equals(cliente.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return email.hashCode();
+    }
+
 }

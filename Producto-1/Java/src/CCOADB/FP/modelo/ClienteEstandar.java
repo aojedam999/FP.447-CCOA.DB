@@ -10,4 +10,10 @@ public class ClienteEstandar extends Cliente {
     public double calcularDescuentoEnvio() {
         return 0.0;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\nTipo: Cliente Estándar";
+    }
+
 }
