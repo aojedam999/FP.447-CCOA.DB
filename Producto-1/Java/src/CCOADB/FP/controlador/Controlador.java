@@ -21,8 +21,5 @@ public class Controlador {
         datos.addArticulo(articulo);
     }
 
-    public void addPedido(Pedido pedido) {
-        datos.addPedido(pedido);
-    }
 
 }
