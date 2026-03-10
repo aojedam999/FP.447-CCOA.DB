@@ -78,7 +78,7 @@ public class MenuConsola {
         String descripcion = leerTexto("Descripción: ");
         double precioVenta = leerDouble("Precio de venta: ", 0);
         double gastosEnvio = leerDouble("Gastos de envío: ", 0);
-        int tiempoPrep = leerInt("Tiempo preparación (min): ", 0, Integer.MAX_VALUE);
+        int tiempoPrep = leerInt("Tiempo de preparación (min): ", 0, Integer.MAX_VALUE);
 
         int stock = leerInt("Stock disponible: ", 0, Integer.MAX_VALUE);
 
@@ -132,7 +132,7 @@ public class MenuConsola {
         String domicilio = leerTexto("Domicilio: ");
         String nifNie = leerTexto("NIF/NIE: ");
 
-        int tipo = leerInt("Tipo (1=Estándar, 2=Premium): ", 1, 2);
+        int tipo = leerInt("Tipo (1 = Estándar, 2 = Premium): ", 1, 2);
 
         Cliente cliente;
         if (tipo == 1) {
@@ -230,14 +230,14 @@ public class MenuConsola {
         empresa.añadirPedido(pedido);
 
         System.out.println("✅ Pedido añadido.");
-        System.out.println("Total pedido: " + pedido.calcularTotal());
+        System.out.println("Total del pedido: " + pedido.calcularTotal() + " €");
     }
 
     private Cliente altaRapidaClienteConEmail(String email) {
         String nombre = leerTexto("Nombre: ");
         String domicilio = leerTexto("Domicilio: ");
         String nifNie = leerTexto("NIF/NIE: ");
-        int tipo = leerInt("Tipo (1=Estándar, 2=Premium): ", 1, 2);
+        int tipo = leerInt("Tipo (1 = Estándar, 2 = Premium): ", 1, 2);
 
         if (tipo == 1) {
             return new ClienteEstandar(email, nombre, domicilio, nifNie);
@@ -269,7 +269,7 @@ public class MenuConsola {
 
 
         if (pedido.getEstado() == EstadoEnvio.ENVIADO) {
-            System.out.println("❌ No se puede eliminar: el pedido ya está ENVIADO.");
+            System.out.println("❌ No se puede eliminar: ¡el pedido ya está ENVIADO!.");
             return;
         }
 
