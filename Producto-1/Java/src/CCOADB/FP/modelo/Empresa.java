@@ -81,9 +81,37 @@ public class Empresa {
     public String toString() {
         return "Empresa\n" +
                 "----------------------------------\n" +
-                "Nombre     : " + nombre + "\n" +
-                "Clientes   : " + clientes.size() + "\n" +
-                "Artículos  : " + articulos.size() + "\n" +
-                "Pedidos    : " + pedidos.size();
+                "Nombre: " + nombre + "\n" +
+                "Clientes: " + clientes.size() + "\n" +
+                "Artículos: " + articulos.size() + "\n" +
+                "Pedidos: " + pedidos.size();
     }
+
+    public Cliente buscarClientePorEmail(String email) {
+        for (Cliente c : clientes) {
+            if (c.getEmail().equals(email)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public Articulo buscarArticuloPorCodigo(String codigo) {
+        for (Articulo a : articulos) {
+            if (a.getCodigo().equals(codigo)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public Pedido buscarPedidoPorNumero(int numeroPedido) {
+        for (Pedido p : pedidos) {
+            if (p.getNumeroPedido() == numeroPedido) {
+                return p;
+            }
+        }
+        return null;
+    }
+
 }

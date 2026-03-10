@@ -49,24 +49,40 @@ public class Pedido {
         return totalProductos + gastosConDescuento;
     }
 
-    public boolean puedeEliminarse() {
-        return estado == EstadoEnvio.PENDIENTE;
-    }
+    public boolean puedeEliminarse() {return estado == EstadoEnvio.PENDIENTE;}
 
-    public void actualizarEstado() {
-        this.estado = EstadoEnvio.ENVIADO;
-    }
+    public void actualizarEstado() {this.estado = EstadoEnvio.ENVIADO;}
 
     @Override
     public String toString() {
         return "Pedido\n" +
                 "----------------------------------\n" +
-                "Número de pedido     : " + numeroPedido + "\n" +
-                "Fecha/Hora        : " + fechaHora + "\n" +
-                "Cliente           : " + cliente.getNombre() + "\n" +
-                "Artículo          : " + articulo.getDescripcion() + "\n" +
-                "Unidades          : " + unidades + "\n" +
-                "Estado            : " + estado + "\n" +
-                "Total             : " + calcularTotal();
+                "Número de pedido: " + numeroPedido + "\n" +
+                "Fecha/Hora: " + fechaHora + "\n" +
+                "Cliente: " + cliente.getNombre() + "\n" +
+                "Artículo: " + articulo.getDescripcion() + "\n" +
+                "Unidades: " + unidades + "\n" +
+                "Estado: " + estado + "\n" +
+                "Total: " + calcularTotal();
     }
+
+    public boolean estaPendiente() {return estado == EstadoEnvio.PENDIENTE;}
+
+    public boolean estaEnviado() {return estado == EstadoEnvio.ENVIADO;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pedido)) return false;
+
+        Pedido pedido = (Pedido) o;
+
+        return numeroPedido == pedido.numeroPedido;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(numeroPedido);
+    }
+
 }
