@@ -10,10 +10,10 @@ import java.util.Scanner;
 
 public class MenuConsola {
 
-    // Lo mantenemos para no tocar el trabajo del equipo (aunque ahora no lo usemos mucho)
+
     private final Controlador controlador;
 
-    // Trabajaremos con Empresa porque ya tiene listas y métodos de mostrar
+
     private final Empresa empresa;
 
     private final Scanner sc;
@@ -80,7 +80,6 @@ public class MenuConsola {
         double gastosEnvio = leerDouble("Gastos de envío: ", 0);
         int tiempoPrep = leerInt("Tiempo preparación (min): ", 0, Integer.MAX_VALUE);
 
-        // En tu modelo Articulo tiene stock (aunque el enunciado no lo pida aún)
         int stock = leerInt("Stock disponible: ", 0, Integer.MAX_VALUE);
 
         Articulo articulo = new Articulo(codigo, descripcion, precioVenta, gastosEnvio, tiempoPrep, stock);
@@ -262,13 +261,13 @@ public class MenuConsola {
             return;
         }
 
-        // Regla del enunciado (sin tocar el modelo): no se cancela si ya pasó el tiempo de preparación
+
         if (!esCancelablePorTiempo(pedido)) {
             System.out.println("❌ No se puede eliminar: ha pasado el tiempo de preparación del artículo.");
             return;
         }
 
-        // Además, si ya está ENVIADO, tampoco se debería eliminar
+
         if (pedido.getEstado() == EstadoEnvio.ENVIADO) {
             System.out.println("❌ No se puede eliminar: el pedido ya está ENVIADO.");
             return;
@@ -302,7 +301,7 @@ public class MenuConsola {
             return;
         }
 
-        // Con filtro: buscamos el cliente y usamos los métodos de Empresa
+
         Cliente cliente = buscarClientePorEmail(email);
         if (cliente == null) {
             System.out.println("❌ No existe un cliente con ese email.");
