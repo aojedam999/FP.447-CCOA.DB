@@ -161,12 +161,90 @@ public class MenuConsola {
 
     private void mostrarClientesEstandar() {
         System.out.println("\n[Clientes Estándar]");
+
+        if (!hayClientesDelTipo(ClienteEstandar.class)) {
+            preguntarAltaClientePorTipo("Estándar");
+            return;
+        }
+
         controlador.mostrarClientesEstandar();
     }
 
     private void mostrarClientesPremium() {
         System.out.println("\n[Clientes Premium]");
+
+        if (!hayClientesDelTipo(ClientePremium.class)) {
+            preguntarAltaClientePorTipo("Premium");
+            return;
+        }
+
         controlador.mostrarClientesPremium();
+    }
+
+    private boolean hayClientesDelTipo(Class<?> tipoCliente) {
+        for (Cliente c : controlador.getClientes()) {
+            if (tipoCliente.isInstance(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void preguntarAltaClientePorTipo(String tipoCliente) {
+        System.out.println("Ahora mismo no hay ningún Cliente " + tipoCliente + ".");
+        String resp = leerTextoOpcional("¿Quiere añadir un Cliente " + tipoCliente + "? (s/n): ")
+                .trim()
+                .toLowerCase();
+
+        if (resp.equals("s")) {
+            if (tipoCliente.equals("Estándar")) {
+                anadirClienteEstandar();
+            } else if (tipoCliente.equals("Premium")) {
+                anadirClientePremium();
+            }
+        }
+    }
+
+    private void anadirClienteEstandar() {
+        System.out.println("\n[Alta Cliente Estándar]");
+        String email = leerTexto("Email (identificador): ");
+
+        try {
+            controlador.buscarClientePorEmail(email);
+            System.out.println("⚠️ Ya existe un cliente con ese email.");
+            return;
+        } catch (ClienteNoEncontradoException ignored) {
+            // No existe así que seguimos
+        }
+
+        String nombre = leerTexto("Nombre: ");
+        String domicilio = leerTexto("Domicilio: ");
+        String nifNie = leerTexto("NIF/NIE: ");
+
+        Cliente cliente = new ClienteEstandar(email, nombre, domicilio, nifNie);
+        controlador.addCliente(cliente);
+        System.out.println("✅ Cliente Estándar añadido.");
+    }
+
+    private void anadirClientePremium() {
+        System.out.println("\n[Alta Cliente Premium]");
+        String email = leerTexto("Email (identificador): ");
+
+        try {
+            controlador.buscarClientePorEmail(email);
+            System.out.println("⚠️ Ya existe un cliente con ese email.");
+            return;
+        } catch (ClienteNoEncontradoException ignored) {
+            // No existe así que seguimos
+        }
+
+        String nombre = leerTexto("Nombre: ");
+        String domicilio = leerTexto("Domicilio: ");
+        String nifNie = leerTexto("NIF/NIE: ");
+
+        Cliente cliente = new ClientePremium(email, nombre, domicilio, nifNie, 30.0, 20);
+        controlador.addCliente(cliente);
+        System.out.println("✅ Cliente Premium añadido.");
     }
 
     // ---------------- MENÚ PEDIDOS ----------------
@@ -198,6 +276,15 @@ public class MenuConsola {
 
         if (controlador.getArticulos().isEmpty()) {
             System.out.println("⚠️ No puedes crear pedidos si no hay artículos.");
+
+            String resp = leerTextoOpcional("¿Quieres crear un artículo? (s/n): ")
+                    .trim()
+                    .toLowerCase();
+
+            if (resp.equals("s")) {
+                anadirArticulo();
+            }
+
             return;
         }
 
@@ -240,7 +327,7 @@ public class MenuConsola {
         try {
             controlador.addPedido(pedido);
             System.out.println("✅ Pedido añadido.");
-            System.out.println("Total del pedido: " + pedido.calcularTotal() + " €");
+            System.out.printf("Total del pedido: %.2f €%n", pedido.calcularTotal());
         } catch (StockInsuficienteException e) {
             System.out.println("❌ " + e.getMessage());
         }

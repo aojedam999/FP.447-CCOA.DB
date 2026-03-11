@@ -52,10 +52,10 @@ public class Articulo {
                 "----------------------------------\n" +
                 "Código: " + codigo + "\n" +
                 "Descripción: " + descripcion + "\n" +
-                "Precio de venta: " + precioVenta + "\n" +
-                "Gastos de envío: " + gastosEnvio + "\n" +
+                "Precio de venta: " + String.format("%.2f €", precioVenta).replace(".", ",") + "\n" +
+                "Gastos de envío: " + String.format("%.2f €", gastosEnvio).replace(".", ",") + "\n" +
                 "Tiempo de preparación: " + tiempoPreparacionMin + " min\n" +
-                "Stock disponible: " + stockDisponible;
+                "Stock disponible: " + stockDisponible + " unidad/es";
     }
 
     public boolean hayStock(int unidades) {return stockDisponible >= unidades;}

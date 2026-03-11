@@ -29,7 +29,7 @@ public class ClientePremium extends Cliente {
     public String toString() {
         return super.toString() +
                 "\nTipo: Cliente Premium" +
-                "\nCuota anual: " + cuotaAnual +
+                "\nCuota anual: " + String.format("%.2f €", cuotaAnual).replace(".", ",") +
                 "\nDescuento: " + descuentoEnvio + "%";
     }
 }
