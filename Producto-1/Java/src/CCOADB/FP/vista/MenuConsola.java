@@ -300,6 +300,8 @@ public class MenuConsola {
 
         // Cliente: si no existe, se da de alta (como pide el enunciado)
         String email = leerTexto("Email cliente: ");
+        System.out.println("-----------------------------------------------------");
+
         Cliente cliente;
         try {
             cliente = controlador.buscarClientePorEmail(email);
@@ -308,6 +310,7 @@ public class MenuConsola {
             cliente = altaRapidaClienteConEmail(email);
             controlador.addCliente(cliente);
             System.out.println("✅ Cliente creado.");
+            System.out.println();
         }
 
         // Artículo debe existir
@@ -328,6 +331,7 @@ public class MenuConsola {
             controlador.addPedido(pedido);
             System.out.println("✅ Pedido añadido.");
             System.out.printf("Total del pedido: %.2f €%n", pedido.calcularTotal());
+            System.out.println();
         } catch (StockInsuficienteException e) {
             System.out.println("❌ " + e.getMessage());
         }
@@ -379,6 +383,7 @@ public class MenuConsola {
         }
 
         String email = leerTextoOpcional("Email para filtrar (ENTER = sin filtro): ").trim();
+        System.out.println();
 
         if (email.isEmpty()) {
             // Sin filtro: mostramos todos por estado

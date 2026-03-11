@@ -68,12 +68,13 @@ public class Pedido {
         return "Pedido\n" +
                 "----------------------------------\n" +
                 "Número de pedido: " + numeroPedido + "\n" +
-                "Fecha/Hora: " + fechaHora + "\n" +
+                "Fecha y hora: " + fechaHora.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n" +
                 "Cliente: " + cliente.getNombre() + "\n" +
                 "Artículo: " + articulo.getDescripcion() + "\n" +
                 "Unidades: " + unidades + "\n" +
                 "Estado: " + estado + "\n" +
-                "Total: " + calcularTotal();
+                "Total: " + String.format("%.2f €", calcularTotal()).replace(".", ",");
+
     }
 
     public boolean estaPendiente() {return estado == EstadoEnvio.PENDIENTE;}
