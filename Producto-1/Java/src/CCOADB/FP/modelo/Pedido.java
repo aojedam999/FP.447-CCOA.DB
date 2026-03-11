@@ -1,5 +1,6 @@
 package CCOADB.FP.modelo;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Pedido {
@@ -49,7 +50,16 @@ public class Pedido {
         return totalProductos + gastosConDescuento;
     }
 
-    public boolean puedeEliminarse() {return estado == EstadoEnvio.PENDIENTE;}
+    public boolean puedeEliminarse() {
+        return estado == EstadoEnvio.PENDIENTE && esCancelable();
+    }
+
+    public boolean esCancelable() {
+
+        int prepMin = articulo.getTiempoPreparacionMin();
+        long mins = Duration.between(fechaHora, LocalDateTime.now()).toMinutes();
+        return mins <= prepMin;
+    }
 
     public void actualizarEstado() {this.estado = EstadoEnvio.ENVIADO;}
 

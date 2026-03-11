@@ -2,32 +2,26 @@ package CCOADB.FP.vista;
 
 import CCOADB.FP.controlador.Controlador;
 import CCOADB.FP.modelo.*;
+import CCOADB.FP.modelo.excepciones.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Scanner;
 
 public class MenuConsola {
 
-
     private final Controlador controlador;
-
-
-    private final Empresa empresa;
 
     private final Scanner sc;
 
     public MenuConsola(Controlador controlador) {
         this.controlador = controlador;
-        this.empresa = new Empresa("Online Store");
         this.sc = new Scanner(System.in);
     }
 
     public void iniciar() {
         int opcion;
         do {
-            actualizarEstadosEnvio(); // para que "pendiente/enviado" tenga sentido
+            controlador.actualizarEstadosEnvio(); // para que "pendiente/enviado" tenga sentido
 
             System.out.println("\n=== ONLINE STORE ===");
             System.out.println("1. Gestión Artículos");
@@ -70,9 +64,12 @@ public class MenuConsola {
         System.out.println("\n[Alta Artículo]");
         String codigo = leerTexto("Código (alfanumérico): ");
 
-        if (buscarArticuloPorCodigo(codigo) != null) {
+        try {
+            controlador.buscarArticuloPorCodigo(codigo);
             System.out.println("⚠️ Ya existe un artículo con ese código.");
             return;
+        } catch (ArticuloNoEncontradoException ignored) {
+            // No existe así que seguimos
         }
 
         String descripcion = leerTexto("Descripción: ");
@@ -83,18 +80,20 @@ public class MenuConsola {
         int stock = leerInt("Stock disponible: ", 0, Integer.MAX_VALUE);
 
         Articulo articulo = new Articulo(codigo, descripcion, precioVenta, gastosEnvio, tiempoPrep, stock);
-        empresa.añadirArticulo(articulo);
+        controlador.addArticulo(articulo);
 
         System.out.println("✅ Artículo añadido.");
     }
 
     private void mostrarArticulos() {
         System.out.println("\n[Listado Artículos]");
-        if (empresa.getArticulos().isEmpty()) {
+        if (controlador.getArticulos().isEmpty()) {
             System.out.println("No hay artículos.");
             return;
         }
-        empresa.mostrarArticulo();
+        for (Articulo a : controlador.getArticulos()) {
+            System.out.println(a);
+        }
     }
 
     // ---------------- MENÚ CLIENTES ----------------
@@ -123,9 +122,12 @@ public class MenuConsola {
         System.out.println("\n[Alta Cliente]");
         String email = leerTexto("Email (identificador): ");
 
-        if (buscarClientePorEmail(email) != null) {
+        try {
+            controlador.buscarClientePorEmail(email);
             System.out.println("⚠️ Ya existe un cliente con ese email.");
             return;
+        } catch (ClienteNoEncontradoException ignored) {
+            // No existe así que seguimos
         }
 
         String nombre = leerTexto("Nombre: ");
@@ -142,34 +144,36 @@ public class MenuConsola {
             cliente = new ClientePremium(email, nombre, domicilio, nifNie, 30.0, 20);
         }
 
-        empresa.añadirCliente(cliente);
+        controlador.addCliente(cliente);
         System.out.println("✅ Cliente añadido.");
     }
 
     private void mostrarClientes() {
         System.out.println("\n[Listado Clientes]");
-        if (empresa.getClientes().isEmpty()) {
+        if (controlador.getClientes().isEmpty()) {
             System.out.println("No hay clientes.");
             return;
         }
-        empresa.mostrarClientes();
+        for (Cliente c : controlador.getClientes()) {
+            System.out.println(c);
+        }
     }
 
     private void mostrarClientesEstandar() {
         System.out.println("\n[Clientes Estándar]");
-        empresa.mostrarClientesEstandar();
+        controlador.mostrarClientesEstandar();
     }
 
     private void mostrarClientesPremium() {
         System.out.println("\n[Clientes Premium]");
-        empresa.mostrarClientesPremium();
+        controlador.mostrarClientesPremium();
     }
 
     // ---------------- MENÚ PEDIDOS ----------------
     private void menuPedidos() {
         int op;
         do {
-            actualizarEstadosEnvio();
+            controlador.actualizarEstadosEnvio();
 
             System.out.println("\n--- Gestión Pedidos ---");
             System.out.println("1. Añadir Pedido");
@@ -192,34 +196,39 @@ public class MenuConsola {
     private void anadirPedido() {
         System.out.println("\n[Alta Pedido]");
 
-        if (empresa.getArticulos().isEmpty()) {
+        if (controlador.getArticulos().isEmpty()) {
             System.out.println("⚠️ No puedes crear pedidos si no hay artículos.");
             return;
         }
 
         int numPedido = leerInt("Número de pedido: ", 1, Integer.MAX_VALUE);
 
-        if (buscarPedidoPorNumero(numPedido) != null) {
+        try {
+            controlador.buscarPedidoPorNumero(numPedido);
             System.out.println("⚠️ Ya existe un pedido con ese número.");
             return;
+        } catch (PedidoNoEncontradoException ignored) {
+            // No existe así que seguimos
         }
 
         // Cliente: si no existe, se da de alta (como pide el enunciado)
         String email = leerTexto("Email cliente: ");
-        Cliente cliente = buscarClientePorEmail(email);
-
-        if (cliente == null) {
+        Cliente cliente;
+        try {
+            cliente = controlador.buscarClientePorEmail(email);
+        } catch (ClienteNoEncontradoException e) {
             System.out.println("Cliente no existe. Vamos a darlo de alta:");
             cliente = altaRapidaClienteConEmail(email);
-            empresa.añadirCliente(cliente);
+            controlador.addCliente(cliente);
             System.out.println("✅ Cliente creado.");
         }
 
         // Artículo debe existir
         String codigo = leerTexto("Código artículo (debe existir): ");
-        Articulo articulo = buscarArticuloPorCodigo(codigo);
-
-        if (articulo == null) {
+        Articulo articulo;
+        try {
+            articulo = controlador.buscarArticuloPorCodigo(codigo);
+        } catch (ArticuloNoEncontradoException e) {
             System.out.println("❌ El artículo no existe. Crea primero el artículo.");
             return;
         }
@@ -227,10 +236,14 @@ public class MenuConsola {
         int unidades = leerInt("Unidades: ", 1, Integer.MAX_VALUE);
 
         Pedido pedido = new Pedido(numPedido, LocalDateTime.now(), unidades, cliente, articulo);
-        empresa.añadirPedido(pedido);
 
-        System.out.println("✅ Pedido añadido.");
-        System.out.println("Total del pedido: " + pedido.calcularTotal() + " €");
+        try {
+            controlador.addPedido(pedido);
+            System.out.println("✅ Pedido añadido.");
+            System.out.println("Total del pedido: " + pedido.calcularTotal() + " €");
+        } catch (StockInsuficienteException e) {
+            System.out.println("❌ " + e.getMessage());
+        }
     }
 
     private Cliente altaRapidaClienteConEmail(String email) {
@@ -248,39 +261,32 @@ public class MenuConsola {
 
     private void eliminarPedido() {
         System.out.println("\n[Eliminar Pedido]");
-        if (empresa.getPedidos().isEmpty()) {
+        if (controlador.getPedidos().isEmpty()) {
             System.out.println("No hay pedidos.");
             return;
         }
 
         int num = leerInt("Número de pedido a eliminar: ", 1, Integer.MAX_VALUE);
-        Pedido pedido = buscarPedidoPorNumero(num);
-
-        if (pedido == null) {
-            System.out.println("❌ Pedido no encontrado.");
+        Pedido pedido;
+        try {
+            pedido = controlador.buscarPedidoPorNumero(num);
+        } catch (PedidoNoEncontradoException e) {
+            System.out.println("❌ " + e.getMessage());
             return;
         }
 
-
-        if (!esCancelablePorTiempo(pedido)) {
-            System.out.println("❌ No se puede eliminar: ha pasado el tiempo de preparación del artículo.");
-            return;
+        try {
+            controlador.eliminarPedido(pedido);
+            System.out.println("✅ Pedido eliminado.");
+        } catch (PedidoNoEliminableException e) {
+            System.out.println("❌ " + e.getMessage());
         }
-
-
-        if (pedido.getEstado() == EstadoEnvio.ENVIADO) {
-            System.out.println("❌ No se puede eliminar: ¡el pedido ya está ENVIADO!.");
-            return;
-        }
-
-        empresa.eliminarPedido(pedido);
-        System.out.println("✅ Pedido eliminado.");
     }
 
     private void mostrarPedidosPorEstado(EstadoEnvio estado) {
         System.out.println("\n[Mostrar pedidos " + estado + "]");
 
-        if (empresa.getPedidos().isEmpty()) {
+        if (controlador.getPedidos().isEmpty()) {
             System.out.println("No hay pedidos.");
             return;
         }
@@ -290,7 +296,7 @@ public class MenuConsola {
         if (email.isEmpty()) {
             // Sin filtro: mostramos todos por estado
             boolean alguno = false;
-            for (Pedido p : empresa.getPedidos()) {
+            for (Pedido p : controlador.getPedidos()) {
                 if (p.getEstado() == estado) {
                     System.out.println(p);
                     System.out.println();
@@ -302,57 +308,22 @@ public class MenuConsola {
         }
 
 
-        Cliente cliente = buscarClientePorEmail(email);
-        if (cliente == null) {
-            System.out.println("❌ No existe un cliente con ese email.");
+        Cliente cliente;
+        try {
+            cliente = controlador.buscarClientePorEmail(email);
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("❌ " + e.getMessage());
             return;
         }
 
+
         if (estado == EstadoEnvio.PENDIENTE) {
-            empresa.mostrarPedidosPendientes(cliente);
+            controlador.mostrarPedidosPendientes(cliente);
         } else {
-            empresa.mostrarPedidosEnviados(cliente);
+            controlador.mostrarPedidosEnviados(cliente);
         }
     }
 
-    // ---------------- HELPERS DE BÚSQUEDA ----------------
-    private Cliente buscarClientePorEmail(String email) {
-        for (Cliente c : empresa.getClientes()) {
-            if (c.getEmail().equalsIgnoreCase(email)) return c;
-        }
-        return null;
-    }
-
-    private Articulo buscarArticuloPorCodigo(String codigo) {
-        for (Articulo a : empresa.getArticulos()) {
-            if (a.getCodigo().equalsIgnoreCase(codigo)) return a;
-        }
-        return null;
-    }
-
-    private Pedido buscarPedidoPorNumero(int numero) {
-        for (Pedido p : empresa.getPedidos()) {
-            if (p.getNumeroPedido() == numero) return p;
-        }
-        return null;
-    }
-
-    // ---------------- REGLAS DE TIEMPO / ESTADO ----------------
-    private boolean esCancelablePorTiempo(Pedido p) {
-        int prepMin = p.getArticulo().getTiempoPreparacionMin();
-        long mins = Duration.between(p.getFechaHora(), LocalDateTime.now()).toMinutes();
-        return mins <= prepMin;
-    }
-
-    private void actualizarEstadosEnvio() {
-        List<Pedido> pedidos = empresa.getPedidos();
-        for (Pedido p : pedidos) {
-            if (p.getEstado() == EstadoEnvio.PENDIENTE && !esCancelablePorTiempo(p)) {
-                // Si ya pasó el tiempo de preparación, lo consideramos ENVIADO
-                p.actualizarEstado();
-            }
-        }
-    }
 
     // ---------------- LECTURAS SEGURAS ----------------
     private int leerInt(String msg, int min, int max) {
