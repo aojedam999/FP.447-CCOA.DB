@@ -3,46 +3,89 @@ package CCOADB.FP.controlador;
 import CCOADB.FP.modelo.*;
 import CCOADB.FP.modelo.excepciones.*;
 
+import CCOADB.FP.dao.ClienteDAO;
+import CCOADB.FP.dao.ClienteDAOImpl;
+
 import java.util.List;
 
 public class Controlador {
 
     private Empresa empresa;
 
+    // DAO de clientes (ya conectado a BD)
+    private ClienteDAO clienteDAO;
+
+    // DAOs para otras entidades (NO IMPLEMENTAR, solo preparar)
+    // private ArticuloDAO articuloDAO;
+    // private PedidoDAO pedidoDAO;
+
     public Controlador() {
         empresa = new Empresa("Online Store");
+
+        // Inicializamos DAO de clientes: ya trabaja contra BD
+        clienteDAO = new ClienteDAOImpl();
+
+        // FUTURO (cuando Ona lo implemente)
+        // articuloDAO = new ArticuloDAOImpl();
+        // pedidoDAO = new PedidoDAOImpl();
     }
 
+    // =========================
+    // CLIENTES (YA CON BD)
+    // =========================
 
-    // Métodos Cliente
-    public void addCliente(Cliente cliente) {
-        empresa.añadirCliente(cliente);
+    public void addCliente(Cliente cliente) throws Exception {
+
+        try {
+            clienteDAO.insertar(cliente);
+        } catch (Exception e) {
+            throw new Exception("Error al añadir cliente: posible duplicado o fallo en BD");
+        }
     }
 
     public List<Cliente> getClientes() {
-        return empresa.getClientes();
+        // Antes: empresa.getClientes();
+        // Ahora: datos vienen de la BD
+        return clienteDAO.obtenerTodos();
     }
 
     public void mostrarClientesEstandar() {
-        empresa.mostrarClientesEstandar();
+
+        // Filtrado en memoria de datos obtenidos de BD
+        for (Cliente c : clienteDAO.obtenerTodos()) {
+            if (c instanceof ClienteEstandar) {
+                System.out.println(c);
+            }
+        }
     }
 
     public void mostrarClientesPremium() {
-        empresa.mostrarClientesPremium();
+        for (Cliente c : clienteDAO.obtenerTodos()) {
+            if (c instanceof ClientePremium) {
+                System.out.println(c);
+            }
+        }
     }
 
     public Cliente buscarClientePorEmail(String email) throws ClienteNoEncontradoException {
-        for (Cliente c : empresa.getClientes()) {
-            if (c.getEmail().equalsIgnoreCase(email)) {
-                return c;
-            }
+
+        // Búsqueda directa en BD
+        Cliente cliente = clienteDAO.buscarPorEmail(email);
+
+        if (cliente == null) {
+            throw new ClienteNoEncontradoException("Cliente con email '" + email + "' no encontrado.");
         }
-        throw new ClienteNoEncontradoException("Cliente con email '" + email + "' no encontrado.");
+
+        return cliente;
     }
 
+    // =========================
+    // ARTÍCULOS (AÚN CON ARRAYLIST)
+    // =========================
 
-    // Métodos Articulo
     public void addArticulo(Articulo articulo) {
+
+        // AÚN usa ArrayList: pendiente de DAO (Ona)
         empresa.añadirArticulo(articulo);
     }
 
@@ -59,8 +102,10 @@ public class Controlador {
         throw new ArticuloNoEncontradoException("Artículo con código '" + codigo + "' no encontrado.");
     }
 
+    // =========================
+    // PEDIDOS (AÚN CON ARRAYLIST)
+    // =========================
 
-    // Métodos Pedido
     public void addPedido(Pedido pedido) throws StockInsuficienteException {
 
         if (!pedido.getArticulo().hayStock(pedido.getUnidades())) {
@@ -69,6 +114,8 @@ public class Controlador {
         }
 
         pedido.getArticulo().reducirStock(pedido.getUnidades());
+
+        // AÚN usa ArrayList: pendiente de DAO
         empresa.añadirPedido(pedido);
     }
 
@@ -97,11 +144,15 @@ public class Controlador {
     }
 
     public void eliminarPedido(Pedido pedido) throws PedidoNoEliminableException {
+
         if (!pedido.puedeEliminarse()) {
             throw new PedidoNoEliminableException(
                     "No se puede eliminar el pedido número " + pedido.getNumeroPedido());
         }
+
         pedido.getArticulo().aumentarStock(pedido.getUnidades());
+
+        // AÚN ArrayList: pendiente de DAO
         empresa.eliminarPedido(pedido);
     }
 
