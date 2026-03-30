@@ -15,11 +15,14 @@ public class ClienteDAOImpl implements ClienteDAO {
 
     @Override
     public void insertar(Cliente cliente) {
-        String sql = "INSERT INTO clientes (email, nombre, domicilio, nif_nie, tipo_cliente, cuota_anual, descuento_envio) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes " +
+                "(email, nombre, domicilio, nif_nie, tipo_cliente, cuota_anual, descuento_envio) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection con = ConexionBD.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+        try (
+                Connection con = ConexionBD.getConexion();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
             ps.setString(1, cliente.getEmail());
             ps.setString(2, cliente.getNombre());
             ps.setString(3, cliente.getDomicilio());
@@ -31,8 +34,8 @@ public class ClienteDAOImpl implements ClienteDAO {
                 ps.setInt(7, premium.getDescuentoEnvio());
             } else {
                 ps.setString(5, "ESTANDAR");
-                ps.setDouble(6, 0.0);
-                ps.setInt(7, 0);
+                ps.setNull(6, java.sql.Types.DECIMAL);
+                ps.setNull(7, java.sql.Types.INTEGER);
             }
 
             ps.executeUpdate();
@@ -45,20 +48,21 @@ public class ClienteDAOImpl implements ClienteDAO {
     @Override
     public List<Cliente> obtenerTodos() {
         List<Cliente> lista = new ArrayList<>();
+
         String sql = "SELECT * FROM clientes";
 
-        try (Connection con = ConexionBD.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (
+                Connection con = ConexionBD.getConexion();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
 
             while (rs.next()) {
 
                 String tipo = rs.getString("tipo_cliente");
-
                 Cliente cliente;
 
-                if (tipo.equalsIgnoreCase("PREMIUM")) {
-
+                if ("PREMIUM".equalsIgnoreCase(tipo)) {
                     cliente = new ClientePremium(
                             rs.getString("email"),
                             rs.getString("nombre"),
@@ -67,9 +71,7 @@ public class ClienteDAOImpl implements ClienteDAO {
                             rs.getDouble("cuota_anual"),
                             rs.getInt("descuento_envio")
                     );
-
                 } else {
-
                     cliente = new ClienteEstandar(
                             rs.getString("email"),
                             rs.getString("nombre"),
@@ -90,38 +92,40 @@ public class ClienteDAOImpl implements ClienteDAO {
 
     @Override
     public Cliente buscarPorEmail(String email) {
+
         String sql = "SELECT * FROM clientes WHERE email = ?";
         Cliente cliente = null;
 
-        try (Connection con = ConexionBD.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (
+                Connection con = ConexionBD.getConexion();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
 
             ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
+            try (ResultSet rs = ps.executeQuery()) {
 
-                String tipo = rs.getString("tipo_cliente");
+                if (rs.next()) {
 
-                if (tipo.equalsIgnoreCase("PREMIUM")) {
+                    String tipo = rs.getString("tipo_cliente");
 
-                    cliente = new ClientePremium(
-                            rs.getString("email"),
-                            rs.getString("nombre"),
-                            rs.getString("domicilio"),
-                            rs.getString("nif_nie"),
-                            rs.getDouble("cuota_anual"),
-                            rs.getInt("descuento_envio")
-                    );
-
-                } else {
-
-                    cliente = new ClienteEstandar(
-                            rs.getString("email"),
-                            rs.getString("nombre"),
-                            rs.getString("domicilio"),
-                            rs.getString("nif_nie")
-                    );
+                    if ("PREMIUM".equalsIgnoreCase(tipo)) {
+                        cliente = new ClientePremium(
+                                rs.getString("email"),
+                                rs.getString("nombre"),
+                                rs.getString("domicilio"),
+                                rs.getString("nif_nie"),
+                                rs.getDouble("cuota_anual"),
+                                rs.getInt("descuento_envio")
+                        );
+                    } else {
+                        cliente = new ClienteEstandar(
+                                rs.getString("email"),
+                                rs.getString("nombre"),
+                                rs.getString("domicilio"),
+                                rs.getString("nif_nie")
+                        );
+                    }
                 }
             }
 

@@ -2,10 +2,19 @@ package CCOADB.FP.modelo;
 
 public abstract class Cliente {
 
+    private int id;
     private String email;
     private String nombre;
     private String domicilio;
     private String NIFNIE;
+
+    public Cliente(int id, String email, String nombre, String domicilio, String NIFNIE) {
+        this.id = id;
+        this.email = email;
+        this.nombre = nombre;
+        this.domicilio = domicilio;
+        this.NIFNIE = NIFNIE;
+    }
 
     public Cliente(String email, String nombre, String domicilio, String NIFNIE) {
         this.email = email;
@@ -30,6 +39,13 @@ public abstract class Cliente {
 
     public void setNIFNIE(String NIFNIE) {this.NIFNIE = NIFNIE;}
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     @Override
     public String toString() {
         return "Cliente\n" +

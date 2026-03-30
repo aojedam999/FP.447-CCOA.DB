@@ -29,7 +29,7 @@ public class PedidoTest {
         );
 
         Articulo articulo = new Articulo(
-                "A1",
+                1, "A1",
                 "Teclado",
                 20.0,
                 5.0,
@@ -70,7 +70,7 @@ public class PedidoTest {
         );
 
         Articulo articulo = new Articulo(
-                "A2",
+                2, "A2",
                 "Ratón",
                 15.0,
                 10.0,
@@ -109,7 +109,7 @@ public class PedidoTest {
         );
 
         Articulo articulo = new Articulo(
-                "A3",
+                3, "A3",
                 "Monitor",
                 100.0,
                 12.0,
@@ -142,7 +142,7 @@ public class PedidoTest {
         );
 
         Articulo articulo = new Articulo(
-                "A4",
+                4, "A4",
                 "Portatil",
                 900.0,
                 15.0,

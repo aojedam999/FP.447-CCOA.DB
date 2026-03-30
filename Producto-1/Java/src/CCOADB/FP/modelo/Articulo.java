@@ -1,7 +1,7 @@
 package CCOADB.FP.modelo;
 
 public class Articulo {
-
+    private int id;
     private String codigo;
     private String descripcion;
     private double precioVenta;
@@ -9,9 +9,18 @@ public class Articulo {
     private int tiempoPreparacionMin;
     private int stockDisponible;
 
-    public Articulo(String codigo, String descripcion, double precioVenta,
+    public Articulo(int id, String codigo, String descripcion, double precioVenta,
                     double gastosEnvio, int tiempoPreparacionMin, int stockDisponible) {
+        this.id = id;
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.precioVenta = precioVenta;
+        this.gastosEnvio = gastosEnvio;
+        this.tiempoPreparacionMin = tiempoPreparacionMin;
+        this.stockDisponible = stockDisponible;
+    }
 
+    public Articulo(String codigo, String descripcion, double precioVenta, double gastosEnvio, int tiempoPreparacionMin, int stockDisponible) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.precioVenta = precioVenta;
@@ -44,6 +53,14 @@ public class Articulo {
 
     public void setStockDisponible(int stockDisponible) {
         this.stockDisponible = stockDisponible;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
