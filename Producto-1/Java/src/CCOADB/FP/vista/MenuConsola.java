@@ -144,8 +144,12 @@ public class MenuConsola {
             cliente = new ClientePremium(email, nombre, domicilio, nifNie, 30.0, 20);
         }
 
-        controlador.addCliente(cliente);
-        System.out.println("✅ Cliente añadido.");
+        try {
+            controlador.addCliente(cliente);
+            System.out.println("✅ Cliente añadido.");
+        } catch (Exception e) {
+            System.out.println("❌ Error al añadir cliente: " + e.getMessage());
+        }
     }
 
     private void mostrarClientes() {
@@ -222,8 +226,12 @@ public class MenuConsola {
         String nifNie = leerTexto("NIF/NIE: ");
 
         Cliente cliente = new ClienteEstandar(email, nombre, domicilio, nifNie);
-        controlador.addCliente(cliente);
-        System.out.println("✅ Cliente Estándar añadido.");
+        try {
+            controlador.addCliente(cliente);
+            System.out.println("✅ Cliente Estándar añadido.");
+        } catch (Exception e) {
+            System.out.println("❌ Error al añadir cliente estándar: " + e.getMessage());
+        }
     }
 
     private void anadirClientePremium() {
@@ -243,8 +251,12 @@ public class MenuConsola {
         String nifNie = leerTexto("NIF/NIE: ");
 
         Cliente cliente = new ClientePremium(email, nombre, domicilio, nifNie, 30.0, 20);
-        controlador.addCliente(cliente);
-        System.out.println("✅ Cliente Premium añadido.");
+        try {
+            controlador.addCliente(cliente);
+            System.out.println("✅ Cliente Premium añadido.");
+        } catch (Exception e) {
+            System.out.println("❌ Error al añadir cliente premium: " + e.getMessage());
+        }
     }
 
     // ---------------- MENÚ PEDIDOS ----------------
@@ -308,8 +320,12 @@ public class MenuConsola {
         } catch (ClienteNoEncontradoException e) {
             System.out.println("Cliente no existe. Vamos a darlo de alta:");
             cliente = altaRapidaClienteConEmail(email);
-            controlador.addCliente(cliente);
-            System.out.println("✅ Cliente creado.");
+            try {
+                controlador.addCliente(cliente);
+                System.out.println("✅ Cliente creado.");
+            } catch (Exception e1) {
+                System.out.println("❌ Error al crear cliente: " + e.getMessage());
+            }
             System.out.println();
         }
 
