@@ -4,7 +4,7 @@ import CCOADB.FP.modelo.*;
 import CCOADB.FP.modelo.excepciones.*;
 
 import CCOADB.FP.dao.ClienteDAO;
-import CCOADB.FP.dao.ClienteDAOImpl;
+import CCOADB.FP.dao.ClienteDAOImp;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class Controlador {
         empresa = new Empresa("Online Store");
 
         // Inicializamos DAO de clientes: ya trabaja contra BD
-        clienteDAO = new ClienteDAOImpl();
+        clienteDAO = new ClienteDAOImp();
 
         // FUTURO (cuando Ona lo implemente)
         // articuloDAO = new ArticuloDAOImpl();

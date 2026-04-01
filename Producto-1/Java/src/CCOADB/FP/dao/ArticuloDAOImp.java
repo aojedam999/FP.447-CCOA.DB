@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticuloDAOImpl implements ArticuloDAO {
+public class ArticuloDAOImp implements ArticuloDAO {
 
     @Override
     public void insertar(Articulo articulo) {

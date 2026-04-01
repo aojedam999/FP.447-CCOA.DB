@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PedidoDAOImpl implements PedidoDAO {
+public class PedidoDAOImp implements PedidoDAO {
 
     @Override
     public void insertar(Pedido pedido) {

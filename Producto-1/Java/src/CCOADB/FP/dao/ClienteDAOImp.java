@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteDAOImpl implements ClienteDAO {
+public class ClienteDAOImp implements ClienteDAO {
 
     @Override
     public void insertar(Cliente cliente) {
