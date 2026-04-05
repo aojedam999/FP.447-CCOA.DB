@@ -163,4 +163,21 @@ public class ArticuloDAOImp implements ArticuloDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void reducirStock(Connection conn, String codigo, int cantidad) {
+
+        String sql = "UPDATE Articulos SET stock_disponible = stock_disponible - ? WHERE codigo = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, cantidad);
+            ps.setString(2, codigo);
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

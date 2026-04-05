@@ -80,6 +80,7 @@ public class ClienteDAOImp implements ClienteDAO {
                     );
                 }
 
+                cliente.setId(rs.getInt("id_cliente"));
                 lista.add(cliente);
             }
 
@@ -126,6 +127,8 @@ public class ClienteDAOImp implements ClienteDAO {
                                 rs.getString("nif_nie")
                         );
                     }
+
+                    cliente.setId(rs.getInt("id_cliente"));
                 }
             }
 

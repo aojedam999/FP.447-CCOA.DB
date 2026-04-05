@@ -8,7 +8,6 @@ public abstract class DAOFactory {
 
     public static final int MYSQL = 1;
 
-    // Este método decide qué factory devolver (por ahora solo MySQL)
     public static DAOFactory getFactory(int type) {
         return switch (type) {
             case MYSQL -> new MySQLDAOFactory();
@@ -16,7 +15,6 @@ public abstract class DAOFactory {
         };
     }
 
-    // Estos métodos obligan a cada factory concreta a "dar" sus DAOs
     public abstract ClienteDAO getClienteDAO();
     public abstract ArticuloDAO getArticuloDAO();
     public abstract PedidoDAO getPedidoDAO();

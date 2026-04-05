@@ -37,6 +37,28 @@ public class PedidoDAOImp implements PedidoDAO {
     }
 
     @Override
+    public void insertar(Connection conn, Pedido pedido) {
+
+        String sql = "INSERT INTO Pedidos " +
+                "(id_cliente, id_articulo, fecha_pedido, estado, unidades) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, pedido.getCliente().getId());
+            ps.setInt(2, pedido.getArticulo().getId());
+            ps.setTimestamp(3, java.sql.Timestamp.valueOf(pedido.getFechaHora()));
+            ps.setString(4, pedido.getEstado().name());
+            ps.setInt(5, pedido.getUnidades());
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<Pedido> obtenerTodos() {
 
         List<Pedido> lista = new ArrayList<>();
@@ -44,7 +66,7 @@ public class PedidoDAOImp implements PedidoDAO {
         String sql =
                 "SELECT p.id_pedido, p.fecha_pedido, p.estado, p.unidades, " +
                         "c.id_cliente, c.email, c.nombre, c.domicilio, c.nif_nie, c.tipo_cliente, c.cuota_anual, c.descuento_envio, " +
-                        "a.id_articulo, a.descripcion, a.precio_venta, a.gastos_envio, a.tiempo_preparacion_min " +
+                        "a.id_articulo, a.codigo, a.descripcion, a.precio_venta, a.gastos_envio, a.tiempo_preparacion_min, a.stock_disponible " +
                         "FROM Pedidos p " +
                         "JOIN Clientes c ON p.id_cliente = c.id_cliente " +
                         "JOIN Articulos a ON p.id_articulo = a.id_articulo";
@@ -117,7 +139,7 @@ public class PedidoDAOImp implements PedidoDAO {
         String sql =
                 "SELECT p.id_pedido, p.fecha_pedido, p.estado, p.unidades, " +
                         "c.id_cliente, c.email, c.nombre, c.domicilio, c.nif_nie, c.tipo_cliente, c.cuota_anual, c.descuento_envio, " +
-                        "a.id_articulo, a.descripcion, a.precio_venta, a.gastos_envio, a.tiempo_preparacion_min " +
+                        "a.id_articulo, a.codigo, a.descripcion, a.precio_venta, a.gastos_envio, a.tiempo_preparacion_min, a.stock_disponible " +
                         "FROM Pedidos p " +
                         "JOIN Clientes c ON p.id_cliente = c.id_cliente " +
                         "JOIN Articulos a ON p.id_articulo = a.id_articulo " +

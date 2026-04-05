@@ -3,8 +3,8 @@ package CCOADB.FP.controlador;
 import CCOADB.FP.modelo.*;
 import CCOADB.FP.modelo.excepciones.*;
 
-import CCOADB.FP.dao.ClienteDAO;
-import CCOADB.FP.dao.ClienteDAOImp;
+import CCOADB.FP.dao.*;
+import CCOADB.FP.dao.factory.DAOFactory;
 
 import java.util.List;
 
@@ -12,30 +12,19 @@ public class Controlador {
 
     private Empresa empresa;
 
-    // DAO de clientes (ya conectado a BD)
     private ClienteDAO clienteDAO;
-
-    // DAOs para otras entidades (NO IMPLEMENTAR, solo preparar)
-    // private ArticuloDAO articuloDAO;
-    // private PedidoDAO pedidoDAO;
+    private PedidoDAO pedidoDAO;
 
     public Controlador() {
         empresa = new Empresa("Online Store");
 
-        // Inicializamos DAO de clientes: ya trabaja contra BD
-        clienteDAO = new ClienteDAOImp();
+        DAOFactory factory = DAOFactory.getFactory(DAOFactory.MYSQL);
 
-        // FUTURO (cuando Ona lo implemente)
-        // articuloDAO = new ArticuloDAOImpl();
-        // pedidoDAO = new PedidoDAOImpl();
+        clienteDAO = factory.getClienteDAO();
+        pedidoDAO = factory.getPedidoDAO();
     }
 
-    // =========================
-    // CLIENTES (YA CON BD)
-    // =========================
-
     public void addCliente(Cliente cliente) throws Exception {
-
         try {
             clienteDAO.insertar(cliente);
         } catch (Exception e) {
@@ -44,14 +33,10 @@ public class Controlador {
     }
 
     public List<Cliente> getClientes() {
-        // Antes: empresa.getClientes();
-        // Ahora: datos vienen de la BD
         return clienteDAO.obtenerTodos();
     }
 
     public void mostrarClientesEstandar() {
-
-        // Filtrado en memoria de datos obtenidos de BD
         for (Cliente c : clienteDAO.obtenerTodos()) {
             if (c instanceof ClienteEstandar) {
                 System.out.println(c);
@@ -68,8 +53,6 @@ public class Controlador {
     }
 
     public Cliente buscarClientePorEmail(String email) throws ClienteNoEncontradoException {
-
-        // Búsqueda directa en BD
         Cliente cliente = clienteDAO.buscarPorEmail(email);
 
         if (cliente == null) {
@@ -79,13 +62,7 @@ public class Controlador {
         return cliente;
     }
 
-    // =========================
-    // ARTÍCULOS (AÚN CON ARRAYLIST)
-    // =========================
-
     public void addArticulo(Articulo articulo) {
-
-        // AÚN usa ArrayList: pendiente de DAO (Ona)
         empresa.añadirArticulo(articulo);
     }
 
@@ -102,10 +79,6 @@ public class Controlador {
         throw new ArticuloNoEncontradoException("Artículo con código '" + codigo + "' no encontrado.");
     }
 
-    // =========================
-    // PEDIDOS (AÚN CON ARRAYLIST)
-    // =========================
-
     public void addPedido(Pedido pedido) throws StockInsuficienteException {
 
         if (!pedido.getArticulo().hayStock(pedido.getUnidades())) {
@@ -115,31 +88,28 @@ public class Controlador {
 
         pedido.getArticulo().reducirStock(pedido.getUnidades());
 
-        // AÚN usa ArrayList: pendiente de DAO
-        empresa.añadirPedido(pedido);
+        pedidoDAO.insertar(pedido);
     }
 
     public List<Pedido> getPedidos() {
-        return empresa.getPedidos();
+        return pedidoDAO.obtenerTodos();
     }
 
     public Pedido buscarPedidoPorNumero(int numero) throws PedidoNoEncontradoException {
-        for (Pedido p : empresa.getPedidos()) {
-            if (p.getNumeroPedido() == numero) {
-                return p;
-            }
+        Pedido p = pedidoDAO.buscarPorId(numero);
+
+        if (p == null) {
+            throw new PedidoNoEncontradoException("Pedido con número '" + numero + "' no encontrado.");
         }
-        throw new PedidoNoEncontradoException("Pedido con número '" + numero + "' no encontrado.");
+
+        return p;
     }
 
     public void actualizarEstadosEnvio() {
-
-        for (Pedido p : empresa.getPedidos()) {
-
+        for (Pedido p : pedidoDAO.obtenerTodos()) {
             if (p.getEstado() == EstadoEnvio.PENDIENTE && !p.esCancelable()) {
                 p.actualizarEstado();
             }
-
         }
     }
 
@@ -151,16 +121,21 @@ public class Controlador {
         }
 
         pedido.getArticulo().aumentarStock(pedido.getUnidades());
-
-        // AÚN ArrayList: pendiente de DAO
-        empresa.eliminarPedido(pedido);
     }
 
     public void mostrarPedidosPendientes(Cliente cliente) {
-        empresa.mostrarPedidosPendientes(cliente);
+        for (Pedido p : pedidoDAO.obtenerTodos()) {
+            if (p.getCliente().equals(cliente) && p.estaPendiente()) {
+                System.out.println(p);
+            }
+        }
     }
 
     public void mostrarPedidosEnviados(Cliente cliente) {
-        empresa.mostrarPedidosEnviados(cliente);
+        for (Pedido p : pedidoDAO.obtenerTodos()) {
+            if (p.getCliente().equals(cliente) && p.estaEnviado()) {
+                System.out.println(p);
+            }
+        }
     }
 }

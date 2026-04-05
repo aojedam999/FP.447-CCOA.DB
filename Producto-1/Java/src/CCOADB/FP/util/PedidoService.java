@@ -1,4 +1,4 @@
-package CCOADB.FP.servicios;
+package CCOADB.FP.util;
 
 import CCOADB.FP.dao.ArticuloDAOImp;
 import CCOADB.FP.dao.PedidoDAOImp;
@@ -18,7 +18,7 @@ public class PedidoService {
     public void crearPedidoConTransaccion(Pedido pedido) throws Exception {
         TransactionManager.runInTransaction(conn -> {
             // 1) Insertar pedido
-            pedidoDAO.insertarPedido(conn, pedido);
+            pedidoDAO.insertar(conn, pedido);
 
             // 2) Reducir stock
             articuloDAO.reducirStock(conn,
