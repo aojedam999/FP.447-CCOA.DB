@@ -8,28 +8,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.CallableStatement;
 
 public class PedidoDAOImp implements PedidoDAO {
 
     @Override
     public void insertar(Pedido pedido) {
 
-        String sql = "INSERT INTO Pedidos " +
-                "(id_cliente, id_articulo, fecha_pedido, estado, unidades) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "{CALL crear_pedido(?, ?, ?, ?, ?)}";
 
         try (
                 Connection con = ConexionBD.getConexion();
-                PreparedStatement ps = con.prepareStatement(sql)
+                CallableStatement cs = con.prepareCall(sql)
         ) {
 
-            ps.setInt(1, pedido.getCliente().getId());
-            ps.setInt(2, pedido.getArticulo().getId());
-            ps.setTimestamp(3, java.sql.Timestamp.valueOf(pedido.getFechaHora()));
-            ps.setString(4, pedido.getEstado().name());
-            ps.setInt(5, pedido.getUnidades());
+            cs.setInt(1, pedido.getCliente().getId());
+            cs.setInt(2, pedido.getArticulo().getId());
+            cs.setTimestamp(3, java.sql.Timestamp.valueOf(pedido.getFechaHora()));
+            cs.setString(4, pedido.getEstado().name());
+            cs.setInt(5, pedido.getUnidades());
 
-            ps.executeUpdate();
+            cs.execute();
 
         } catch (Exception e) {
             e.printStackTrace();
