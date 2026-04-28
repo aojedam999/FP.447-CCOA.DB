@@ -2,15 +2,39 @@ package CCOADB.FP.modelo;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "pedidos")
 public class Pedido {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_pedido")
     private int numeroPedido;
+
+    //FK pedidos.id_cliente -> clientes.id_cliente
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
+
+    //FK pedidos.id_articulo -> articulos.id_articulo
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_articulo", nullable = false)
     private Articulo articulo;
+
+    @Column(name = "unidades", nullable = false)
     private int unidades;
+
+    // En BD se llama fecha_pedido
+    @Column(name = "fecha_pedido", nullable = false)
     private LocalDateTime fechaHora;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
     private EstadoEnvio estado;
+
+    protected Pedido() {}
 
     public Pedido(int numeroPedido, LocalDateTime fechaHora, int unidades,
                   Cliente cliente, Articulo articulo) {

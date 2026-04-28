@@ -1,12 +1,31 @@
 package CCOADB.FP.modelo;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "clientes")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_cliente")
 
 public abstract class Cliente {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cliente")
     private int id;
+    @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
+
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
+
+    @Column(name = "domicilio", nullable = false, length = 150)
     private String domicilio;
+
+    @Column(name = "nif_nie", nullable = false, length = 20, unique = true)
     private String NIFNIE;
+
+    // Constructor vacío obligatorio para JPA
+    protected Cliente() {}
 
     public Cliente(int id, String email, String nombre, String domicilio, String NIFNIE) {
         this.id = id;

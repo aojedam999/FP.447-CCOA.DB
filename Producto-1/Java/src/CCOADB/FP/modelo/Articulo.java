@@ -1,13 +1,37 @@
 package CCOADB.FP.modelo;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "articulos")
+
+
 public class Articulo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_articulo")
     private int id;
+
+    @Column(name = "codigo", nullable = false, length = 50, unique = true)
     private String codigo;
+
+    @Column(name = "descripcion", nullable = false, length = 150)
     private String descripcion;
+
+    @Column(name = "precio_venta", nullable = false)
     private double precioVenta;
+
+    @Column(name = "gastos_envio", nullable = false)
     private double gastosEnvio;
+
+    @Column(name = "tiempo_preparacion_min", nullable = false)
     private int tiempoPreparacionMin;
+
+    @Column(name = "stock_disponible", nullable = false)
     private int stockDisponible;
+
+    protected Articulo() {}
 
     public Articulo(int id, String codigo, String descripcion, double precioVenta,
                     double gastosEnvio, int tiempoPreparacionMin, int stockDisponible) {

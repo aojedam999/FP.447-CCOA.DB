@@ -1,9 +1,21 @@
 package CCOADB.FP.modelo;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("PREMIUM")
+
 public class ClientePremium extends Cliente {
 
+    @Column(name = "cuota_anual")
     private double cuotaAnual;
+
+    @Column(name = "descuento_envio")
     private int descuentoEnvio;
+
+    protected ClientePremium() {}
 
     public ClientePremium(String email, String nombre, String domicilio, String NIFNIE,
                           double cuotaAnual, int descuentoEnvio) {

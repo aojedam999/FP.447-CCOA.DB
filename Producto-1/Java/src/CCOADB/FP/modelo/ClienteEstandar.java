@@ -1,6 +1,14 @@
 package CCOADB.FP.modelo;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("ESTANDAR")
 
 public class ClienteEstandar extends Cliente {
+
+    //Constructor vacío obligatorio
+    protected ClienteEstandar() {}
 
     public ClienteEstandar(String email, String nombre, String domicilio, String NIFNIE) {
         super(email, nombre, domicilio, NIFNIE);
