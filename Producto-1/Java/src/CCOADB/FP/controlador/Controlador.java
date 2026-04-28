@@ -14,7 +14,6 @@ public class Controlador {
 
     private ClienteDAO clienteDAO;
     private PedidoDAO pedidoDAO;
-    private ArticuloDAO articuloDAO;
 
     public Controlador() {
         empresa = new Empresa("Online Store");
@@ -23,7 +22,6 @@ public class Controlador {
 
         clienteDAO = factory.getClienteDAO();
         pedidoDAO = factory.getPedidoDAO();
-        articuloDAO = factory.getArticuloDAO();
     }
 
     public void addCliente(Cliente cliente) throws Exception {
@@ -65,21 +63,20 @@ public class Controlador {
     }
 
     public void addArticulo(Articulo articulo) {
-        articuloDAO.insertar(articulo);
+        empresa.añadirArticulo(articulo);
     }
 
     public List<Articulo> getArticulos() {
-        return articuloDAO.obtenerTodos();
+        return empresa.getArticulos();
     }
 
     public Articulo buscarArticuloPorCodigo(String codigo) throws ArticuloNoEncontradoException {
-        Articulo articulo = articuloDAO.buscarPorCodigo(codigo);
-
-        if (articulo == null) {
-            throw new ArticuloNoEncontradoException("Artículo con código '" + codigo + "' no encontrado.");
+        for (Articulo a : empresa.getArticulos()) {
+            if (a.getCodigo().equalsIgnoreCase(codigo)) {
+                return a;
+            }
         }
-
-        return articulo;
+        throw new ArticuloNoEncontradoException("Artículo con código '" + codigo + "' no encontrado.");
     }
 
     public void addPedido(Pedido pedido) throws StockInsuficienteException {

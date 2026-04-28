@@ -10,35 +10,35 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.CallableStatement;
 
 public class ClienteDAOImp implements ClienteDAO {
 
     @Override
     public void insertar(Cliente cliente) {
-
-        String sql = "{CALL crear_cliente(?, ?, ?, ?, ?, ?, ?)}";
+        String sql = "INSERT INTO clientes " +
+                "(email, nombre, domicilio, nif_nie, tipo_cliente, cuota_anual, descuento_envio) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (
                 Connection con = ConexionBD.getConexion();
-                CallableStatement cs = con.prepareCall(sql)
+                PreparedStatement ps = con.prepareStatement(sql)
         ) {
-            cs.setString(1, cliente.getEmail());
-            cs.setString(2, cliente.getNombre());
-            cs.setString(3, cliente.getDomicilio());
-            cs.setString(4, cliente.getNIFNIE());
+            ps.setString(1, cliente.getEmail());
+            ps.setString(2, cliente.getNombre());
+            ps.setString(3, cliente.getDomicilio());
+            ps.setString(4, cliente.getNIFNIE());
 
             if (cliente instanceof ClientePremium premium) {
-                cs.setString(5, "PREMIUM");
-                cs.setDouble(6, premium.getCuotaAnual());
-                cs.setInt(7, premium.getDescuentoEnvio());
+                ps.setString(5, "PREMIUM");
+                ps.setDouble(6, premium.getCuotaAnual());
+                ps.setInt(7, premium.getDescuentoEnvio());
             } else {
-                cs.setString(5, "ESTANDAR");
-                cs.setNull(6, java.sql.Types.DECIMAL);
-                cs.setNull(7, java.sql.Types.INTEGER);
+                ps.setString(5, "ESTANDAR");
+                ps.setNull(6, java.sql.Types.DECIMAL);
+                ps.setNull(7, java.sql.Types.INTEGER);
             }
 
-            cs.execute();
+            ps.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();

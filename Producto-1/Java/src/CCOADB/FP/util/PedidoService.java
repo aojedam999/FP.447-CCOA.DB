@@ -3,7 +3,6 @@ package CCOADB.FP.util;
 import CCOADB.FP.dao.ArticuloDAOImp;
 import CCOADB.FP.dao.PedidoDAOImp;
 import CCOADB.FP.modelo.Pedido;
-import java.sql.CallableStatement;
 import CCOADB.FP.util.TransactionManager;
 
 public class PedidoService {
@@ -18,16 +17,10 @@ public class PedidoService {
 
     public void crearPedidoConTransaccion(Pedido pedido) throws Exception {
         TransactionManager.runInTransaction(conn -> {
-            CallableStatement cs = conn.prepareCall("{CALL crear_pedido(?, ?, ?, ?, ?)}");
+            // 1) Insertar pedido
+            pedidoDAO.insertar(conn, pedido);
 
-            cs.setInt(1, pedido.getCliente().getId());
-            cs.setInt(2, pedido.getArticulo().getId());
-            cs.setTimestamp(3, java.sql.Timestamp.valueOf(pedido.getFechaHora()));
-            cs.setString(4, pedido.getEstado().name());
-            cs.setInt(5, pedido.getUnidades());
-
-            cs.execute();
-
+            // 2) Reducir stock
             articuloDAO.reducirStock(conn,
                     pedido.getArticulo().getCodigo(),
                     pedido.getUnidades());
