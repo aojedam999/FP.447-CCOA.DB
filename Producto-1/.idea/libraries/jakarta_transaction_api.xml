@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="jakarta.transaction.api" type="repository">
+    <properties maven-id="jakarta.transaction:jakarta.transaction-api:2.0.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
