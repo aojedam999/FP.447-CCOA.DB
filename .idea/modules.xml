@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FP.447-CCOA.DB.iml" filepath="$PROJECT_DIR$/FP.447-CCOA.DB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FP.iml" filepath="$PROJECT_DIR$/FP.iml" />
     </modules>
   </component>
 </project>

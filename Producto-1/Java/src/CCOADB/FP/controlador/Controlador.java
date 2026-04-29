@@ -18,7 +18,7 @@ public class Controlador {
     public Controlador() {
         empresa = new Empresa("Online Store");
 
-        DAOFactory factory = DAOFactory.getFactory(DAOFactory.MYSQL);
+        DAOFactory factory = DAOFactory.getFactory(DAOFactory.JPA);
 
         clienteDAO = factory.getClienteDAO();
         pedidoDAO = factory.getPedidoDAO();
@@ -86,8 +86,11 @@ public class Controlador {
                     + pedido.getArticulo().getDescripcion());
         }
 
-        pedido.getArticulo().reducirStock(pedido.getUnidades());
+        Articulo a = pedido.getArticulo();
+        a.reducirStock(pedido.getUnidades());
 
+        ArticuloDAO articuloDAO = DAOFactory.getFactory(DAOFactory.JPA).getArticuloDAO();
+        articuloDAO.actualizarStock(a.getId(), a.getStockDisponible() - pedido.getUnidades());
         pedidoDAO.insertar(pedido);
     }
 
