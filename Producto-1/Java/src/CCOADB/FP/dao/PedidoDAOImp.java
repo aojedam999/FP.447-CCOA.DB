@@ -37,20 +37,16 @@ public class PedidoDAOImp implements PedidoDAO {
     }
 
     @Override
-    public void insertar(Connection conn, Pedido pedido) {
+    public void actualizarEstado(int idPedido) {
 
-        String sql = "INSERT INTO Pedidos " +
-                "(id_cliente, id_articulo, fecha_pedido, estado, unidades) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "UPDATE Pedidos SET estado = 'ENVIADO' WHERE id_pedido = ?";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (
+                Connection con = ConexionBD.getConexion();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
 
-            ps.setInt(1, pedido.getCliente().getId());
-            ps.setInt(2, pedido.getArticulo().getId());
-            ps.setTimestamp(3, java.sql.Timestamp.valueOf(pedido.getFechaHora()));
-            ps.setString(4, pedido.getEstado().name());
-            ps.setInt(5, pedido.getUnidades());
-
+            ps.setInt(1, idPedido);
             ps.executeUpdate();
 
         } catch (Exception e) {
