@@ -82,15 +82,9 @@ public class Controlador {
     public void addPedido(Pedido pedido) throws StockInsuficienteException {
 
         if (!pedido.getArticulo().hayStock(pedido.getUnidades())) {
-            throw new StockInsuficienteException("No hay suficiente stock para el artículo: "
-                    + pedido.getArticulo().getDescripcion());
+            throw new StockInsuficienteException("No hay suficiente stock...");
         }
 
-        Articulo a = pedido.getArticulo();
-        a.reducirStock(pedido.getUnidades());
-
-        ArticuloDAO articuloDAO = DAOFactory.getFactory(DAOFactory.JPA).getArticuloDAO();
-        articuloDAO.actualizarStock(a.getId(), a.getStockDisponible() - pedido.getUnidades());
         pedidoDAO.insertar(pedido);
     }
 

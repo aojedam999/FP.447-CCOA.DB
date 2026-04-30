@@ -2,7 +2,11 @@ package CCOADB.FP.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
+/**
+ * NO USAR con JPA.
+ * Esta clase está diseñada para JDBC con transacciones manuales.
+ */
+@Deprecated
 public class TransactionManager {
 
     @FunctionalInterface

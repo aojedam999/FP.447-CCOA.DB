@@ -5,6 +5,7 @@ import CCOADB.FP.dao.PedidoDAOImp;
 import CCOADB.FP.modelo.Pedido;
 import CCOADB.FP.util.TransactionManager;
 
+@Deprecated
 public class PedidoService {
 
     private final PedidoDAOImp pedidoDAO;
@@ -17,9 +18,11 @@ public class PedidoService {
 
     public void crearPedidoConTransaccion(Pedido pedido) throws Exception {
         TransactionManager.runInTransaction(conn -> {
-            // 1) Insertar pedido
+            /**
+             * NO USAR con JPA.
+             * Esta clase está diseñada para JDBC con transacciones manuales.// 1) Insertar pedido
             pedidoDAO.insertar(conn, pedido);
-
+            */
             // 2) Reducir stock
             articuloDAO.reducirStock(conn,
                     pedido.getArticulo().getCodigo(),

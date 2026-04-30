@@ -22,16 +22,28 @@ public class PedidoDAOJpa implements PedidoDAO {
         try {
             tx.begin();
 
-            em.persist(pedido);
+            Articulo articuloBD = em.find(Articulo.class, pedido.getArticulo().getId());
 
-            Articulo a = em.find(Articulo.class, pedido.getArticulo().getId());
-            a.setStockDisponible(a.getStockDisponible() - pedido.getUnidades());
+            if (articuloBD == null) {
+                throw new RuntimeException("El artículo no existe en BD");
+            }
+
+            if (articuloBD.getStockDisponible() < pedido.getUnidades()) {
+                throw new RuntimeException("Stock insuficiente");
+            }
+
+            articuloBD.setStockDisponible(
+                    articuloBD.getStockDisponible() - pedido.getUnidades()
+            );
+
+            em.persist(pedido);
 
             tx.commit();
 
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }
