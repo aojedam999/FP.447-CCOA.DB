@@ -1,0 +1,16 @@
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="main.java.FP.CCOADB.vista.controller.MainController">
+
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Button text="Artículos" onAction="#irArticulos"/>
+            <Button text="Clientes" onAction="#irClientes"/>
+            <Button text="Pedidos" onAction="#irPedidos"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contenido"/>
+    </center>
+
+</BorderPane>
