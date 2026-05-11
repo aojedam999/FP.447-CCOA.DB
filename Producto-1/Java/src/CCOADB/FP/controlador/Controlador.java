@@ -13,6 +13,7 @@ public class Controlador {
     private Empresa empresa;
 
     private ClienteDAO clienteDAO;
+    private ArticuloDAO articuloDAO;
     private PedidoDAO pedidoDAO;
 
     public Controlador() {
@@ -21,6 +22,7 @@ public class Controlador {
         DAOFactory factory = DAOFactory.getFactory(DAOFactory.JPA);
 
         clienteDAO = factory.getClienteDAO();
+        articuloDAO = factory.getArticuloDAO();
         pedidoDAO = factory.getPedidoDAO();
     }
 
@@ -63,20 +65,21 @@ public class Controlador {
     }
 
     public void addArticulo(Articulo articulo) {
-        empresa.añadirArticulo(articulo);
+        articuloDAO.insertar(articulo);
     }
 
     public List<Articulo> getArticulos() {
-        return empresa.getArticulos();
+        return articuloDAO.obtenerTodos();
     }
 
     public Articulo buscarArticuloPorCodigo(String codigo) throws ArticuloNoEncontradoException {
-        for (Articulo a : empresa.getArticulos()) {
-            if (a.getCodigo().equalsIgnoreCase(codigo)) {
-                return a;
-            }
+        Articulo articulo = articuloDAO.buscarPorCodigo(codigo);
+
+        if (articulo == null) {
+            throw new ArticuloNoEncontradoException("Artículo con código '" + codigo + "' no encontrado.");
         }
-        throw new ArticuloNoEncontradoException("Artículo con código '" + codigo + "' no encontrado.");
+
+        return articulo;
     }
 
     public void addPedido(Pedido pedido) throws StockInsuficienteException {

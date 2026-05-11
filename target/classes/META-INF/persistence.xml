@@ -6,9 +6,11 @@
     <persistence-unit name="miUnidadPersistencia">
 
         <properties>
+
             <!-- Conexión -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/ccoadb"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value="Isabel20072024!"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
 
             <!-- Hibernate -->
