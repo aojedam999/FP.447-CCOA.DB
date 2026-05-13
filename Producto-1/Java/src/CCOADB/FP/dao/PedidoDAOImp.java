@@ -206,4 +206,17 @@ public class PedidoDAOImp implements PedidoDAO {
 
         return pedido;
     }
+    @Override
+    public void eliminar(int idPedido) {
+        String sql = "DELETE FROM pedidos WHERE id_pedido = ?";
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idPedido);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar pedido en BD", e);
+        }
+    }
 }

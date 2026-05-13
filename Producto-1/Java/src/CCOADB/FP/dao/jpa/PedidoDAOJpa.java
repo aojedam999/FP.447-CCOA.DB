@@ -102,4 +102,24 @@ public class PedidoDAOJpa implements PedidoDAO {
             em.close();
         }
     }
+
+    @Override
+    public void eliminar(int idPedido) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            Pedido pedido = em.find(Pedido.class, idPedido);
+            if (pedido != null) {
+                em.remove(pedido);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Error al eliminar pedido en BD", e);
+        } finally {
+            em.close();
+        }
+    }
 }

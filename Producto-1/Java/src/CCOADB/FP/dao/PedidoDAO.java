@@ -12,4 +12,7 @@ public interface PedidoDAO {
     Pedido buscarPorId(int id);
 
     void actualizarEstado(int idPedido);
+
+    void eliminar(int idPedido);
+
 }

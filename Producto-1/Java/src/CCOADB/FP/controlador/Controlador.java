@@ -138,4 +138,19 @@ public class Controlador {
             }
         }
     }
+
+    public void borrarPedido(Pedido pedido) throws PedidoNoEliminableException {
+
+        if (!pedido.puedeEliminarse()) {
+            throw new PedidoNoEliminableException(
+                    "No se puede eliminar el pedido número " + pedido.getNumeroPedido()
+            );
+        }
+
+        // Reponer stock del artículo
+        pedido.getArticulo().aumentarStock(pedido.getUnidades());
+
+        // BORRAR EN BD
+        pedidoDAO.eliminar(pedido.getNumeroPedido());
+    }
 }
