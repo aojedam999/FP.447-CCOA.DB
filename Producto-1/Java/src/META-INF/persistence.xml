@@ -10,7 +10,10 @@
             <!-- Conexión -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/ccoadb"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="andres.sql"/>
+
+            <!-- Cada integrante debe configurar su contraseña local -->
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
 
             <!-- Hibernate -->
